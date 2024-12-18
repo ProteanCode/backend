@@ -18,11 +18,11 @@ class DatabaseSeeder extends Seeder
             'name' => 'Protean',
             'email' => 'contact@protean.pl',
             'email_verified_at' => now(),
-            'password' => Hash::make('password')
+            'password' => Hash::make('password'),
         ]);
 
         $token = $user->createToken('ui')->plainTextToken;
 
-        $this->command->info("Created an user with API token: " . $token);
+        $this->command->info('Created an user with API token: '.$token);
     }
 }
