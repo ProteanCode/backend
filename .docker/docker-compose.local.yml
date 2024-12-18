@@ -1,0 +1,97 @@
+version: "3.9"
+
+services:
+  web:
+    image: nginx:1.24-alpine3.17-slim
+    working_dir: /var/www/html
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ..:/var/www/html
+      - ./nginx/local/servers:/etc/nginx/conf.d/servers:ro
+      - ./nginx/local/default.no-cache.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./nginx/local/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/local/certs/dhparam.pem:/usr/share/nginx/certs/dhparam.pem:ro
+      - ./nginx/local/certs/nft.dev.pem:/usr/share/nginx/certs/nft.dev.pem:ro
+      - ./nginx/local/certs/nft.dev-key.pem:/usr/share/nginx/certs/nft.dev-key.pem:ro
+    networks:
+      - frontend
+    depends_on:
+      - php
+
+  redis:
+    build:
+      context: ./redis/local
+    networks:
+      - backend
+
+  php:
+    build:
+      context: ./php/local
+    volumes:
+      - ..:/var/www/html
+    depends_on:
+      - redis
+      - mysql
+    networks:
+      - frontend
+      - backend
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    healthcheck:
+      test: ["CMD", "php", "-v"] # Or a custom script to check readiness
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  php-queue:
+    build:
+      context: ./queue/local
+    volumes:
+      - ..:/var/www/html
+    depends_on:
+      - redis
+      - mysql
+    networks:
+      - backend
+
+  mysql:
+    image: mysql:8.3.0
+    ports:
+      - "8306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: nft
+      MYSQL_USER: nft
+      MYSQL_PASSWORD: nft
+      MYSQL_DATABASE: nft
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./mysql/local/conf.d:/etc/mysql/conf.d
+      - ./mysql/local/logs:/var/log/mysql/custom-logs:delegated
+    networks:
+      - backend
+
+  mailpit:
+    image: axllent/mailpit
+    environment:
+      MP_DATA_FILE: /data/mailpit.db
+      MP_MAX_MESSAGES: 5000
+      MP_SMTP_AUTH_ACCEPT_ANY: 1
+      MP_SMTP_AUTH_ALLOW_INSECURE: 1
+    ports:
+      - published: 8025
+        target: 8025
+      - published: 1025
+        target: 1025
+    volumes:
+      - ./mailpit/local/data:/data:rw
+    networks:
+      - backend
+
+networks:
+  frontend:
+  backend:
+
+volumes:
+  mysql-data:

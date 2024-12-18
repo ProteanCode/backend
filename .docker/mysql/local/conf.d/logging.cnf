@@ -1,0 +1,8 @@
+[mysqld]
+general_log = on
+general_log_file=/var/log/mysql/custom-logs/all-queries.log
+
+slow-query-log = 1
+slow-query-log-file = /var/log/mysql/custom-logs/slow-queries.log
+long_query_time = 0.2
+log-queries-not-using-indexes

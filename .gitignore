@@ -1,3 +1,5 @@
+.docker/mailpit/local/data/*
+
 /.phpunit.cache
 /node_modules
 /public/build
