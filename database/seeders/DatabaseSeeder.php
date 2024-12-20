@@ -23,6 +23,6 @@ class DatabaseSeeder extends Seeder
 
         $token = $user->createToken('ui')->plainTextToken;
 
-        $this->command->info('Created an user with API token: '.$token);
+        // $this->command->info('Created an user with API token: '.$token);
     }
 }

@@ -12,11 +12,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('nft_cards', function (Blueprint $table) {
-            $table->id();
-            $table->uuid('uuid')->unique();
+            $table->uuid('id')->primary();
             $table->string('name');
             $table->string('collection');
-            $table->foreignId('user_id')
+            $table->enum('status', ['active', 'inactive']);
+            $table->foreignUuid('user_id')
                 ->constrained()
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate();

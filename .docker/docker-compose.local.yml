@@ -72,6 +72,20 @@ services:
     networks:
       - backend
 
+  mysql-test:
+    image: mysql:8.3.0
+    environment:
+      MYSQL_ROOT_PASSWORD: nft-test
+      MYSQL_USER: nft-test
+      MYSQL_PASSWORD: nft-test
+      MYSQL_DATABASE: nft-test
+    volumes:
+      - mysql-data-test:/var/lib/mysql
+      - ./mysql/local/conf.d:/etc/mysql/conf.d
+      - ./mysql/local/logs:/var/log/mysql/custom-logs:delegated
+    networks:
+      - backend
+
   mailpit:
     image: axllent/mailpit
     environment:
@@ -95,3 +109,4 @@ networks:
 
 volumes:
   mysql-data:
+  mysql-data-test:
