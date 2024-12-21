@@ -35,8 +35,8 @@ class NftCardCreated extends Notification implements ShouldQueue
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-                    ->line('A new card has been created!')
-                    ->line('Hope you like it!');
+            ->line('A new card has been created!')
+            ->line('Hope you like it!');
     }
 
     /**

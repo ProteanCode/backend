@@ -19,7 +19,7 @@ class NftCardController extends Controller
      */
     public function index(IndexNftCardRequest $request)
     {
-        return new NftCardCollection($request->user()->nftCards()->paginate());
+        return new NftCardCollection($request->user()->nftCards()->active()->with('media')->paginate());
     }
 
     /**

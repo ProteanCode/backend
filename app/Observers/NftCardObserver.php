@@ -12,6 +12,6 @@ class NftCardObserver
      */
     public function created(NftCard $nftCard): void
     {
-        $nftCard->user->notify(new NftCardCreated());
+        $nftCard->user->notify(new NftCardCreated);
     }
 }

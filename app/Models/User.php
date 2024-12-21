@@ -39,6 +39,9 @@ use Laravel\Sanctum\HasApiTokens;
  * @method static \Illuminate\Database\Eloquent\Builder|User whereRememberToken($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereUpdatedAt($value)
  *
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\NftCard> $nftCards
+ * @property-read int|null $nft_cards_count
+ *
  * @mixin \Eloquent
  */
 class User extends Authenticatable

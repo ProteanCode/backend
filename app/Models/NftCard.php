@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use App\Enums\MediaConversions;
+use App\Enums\NftCardStatus;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -29,6 +31,13 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
  * @method static \Illuminate\Database\Eloquent\Builder|NftCard whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|NftCard whereUserId($value)
  *
+ * @property string $status
+ * @property-read \Spatie\MediaLibrary\MediaCollections\Models\Collections\MediaCollection<int, Media> $media
+ * @property-read int|null $media_count
+ *
+ * @method static Builder|NftCard active()
+ * @method static Builder|NftCard whereStatus($value)
+ *
  * @mixin \Eloquent
  */
 class NftCard extends Model implements HasMedia
@@ -36,6 +45,11 @@ class NftCard extends Model implements HasMedia
     use HasUuids, InteractsWithMedia;
 
     protected $guarded = ['id'];
+
+    public function scopeActive(Builder $builder): Builder
+    {
+        return $builder->where('status', NftCardStatus::ACTIVE->value);
+    }
 
     public function user(): BelongsTo
     {
