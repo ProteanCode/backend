@@ -4,7 +4,9 @@ namespace Tests\Feature;
 
 use App\Enums\MediaCollection;
 use App\Models\NftCard;
+use App\Notifications\NftCardCreated;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Notification;
 use Laravel\Sanctum\Sanctum;
 use Tests\DatabaseTest;
 
@@ -49,6 +51,8 @@ class NftCardCrudTest extends DatabaseTest
         // Given
         Sanctum::actingAs($this->getUser());
 
+        Notification::fake();
+
         $image = UploadedFile::fake()->image('koenigsegg_jesko_2019.jpg', 800, 600);
 
         // When
@@ -64,6 +68,10 @@ class NftCardCrudTest extends DatabaseTest
         $this->assertNotEmpty(
             $this->getLastCard()->getMedia(MediaCollection::IMAGES->value)
         );
+
+        Notification::assertSentTo($this->user, NftCardCreated::class, function ($notification, $channels) {
+            return in_array('mail', $channels);
+        });
     }
 
     public function test_that_user_can_update_card(): void
