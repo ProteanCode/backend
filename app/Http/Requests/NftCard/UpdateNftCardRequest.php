@@ -22,7 +22,9 @@ class UpdateNftCardRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name' => 'required',
+            'collection' => 'required',
+            'image' => 'required',
         ];
     }
 }

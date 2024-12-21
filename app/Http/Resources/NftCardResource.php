@@ -42,7 +42,7 @@ class NftCardResource extends JsonResource
                 'file_name' => $mediaItem['file_name'],
                 'urls' => $urls
             ];
-        }, $data['media']);
+        }, \Arr::get($data, 'media', []));
 
         return $result;
     }
